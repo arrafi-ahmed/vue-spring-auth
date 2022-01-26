@@ -22,22 +22,31 @@ public class AuthenticationController {
     private UserService userService;
 
     @PostMapping("/api/authenticate/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        User foundUser = userService.findUserByUsername(user.getUsername());
-        if (foundUser != null) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+    public ResponseEntity<?> register(@RequestBody User user) throws Exception {
+        if (userService.findUserByUsername(user.getUsername()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already taken!");
         }
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+
+        try {
+            User savedUser = userService.saveUser(user);
+            if (savedUser != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful!");
+            } else {
+                throw new Exception("Registration failed!");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @PostMapping("/api/authenticate/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        return new ResponseEntity<>(authenticationService.signInAndReturnJWT(user), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.signInAndReturnJWT(user));
     }
 
     //    test jwt token
     @GetMapping("/api/user")
-    public ResponseEntity<?> getUserDetails(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return new ResponseEntity<>(userService.findUserByUsername(userPrincipal.getUsername()), HttpStatus.OK);
+    public ResponseEntity<?> getUserDetails(@AuthenticationPrincipal UserPrincipal userPrincipal) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findUserByUsername(userPrincipal.getUsername()));
     }
 }

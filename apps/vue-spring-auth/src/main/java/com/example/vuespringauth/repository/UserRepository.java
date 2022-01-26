@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Repository
@@ -18,7 +17,7 @@ public class UserRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public User findUserByUsername(String username) {
+    public User findUserByUsername(String username) throws EmptyResultDataAccessException {
         String sql = "select * from users where username=?;";
         Object[] args = {username};
 
@@ -34,7 +33,6 @@ public class UserRepository {
                     user.setName(rs.getString("name"));
                     user.setCreateTime(rs.getObject("create_time", OffsetDateTime.class));
                     user.setRole(Role.getRole(rs.getString("role")));
-                    System.out.println(user);
                     return user;
                 }
             }, args);

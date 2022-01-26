@@ -71,8 +71,7 @@ export default {
   }),
   methods: {
     register() {
-      this.$refs.form.validate();
-      console.log(this.roles)
+      if (!this.$refs.form.validate()) return
       axios
           .post("/api/authenticate/register", {
             username: this.username,
@@ -84,7 +83,7 @@ export default {
             this.$router.push({name: "login"});
           })
           .catch((err) => {
-            this.error = err.response.data.message;
+            this.error = err.response?.data?.message ?? err.response?.data;
           });
     },
   },
@@ -93,5 +92,9 @@ export default {
 <style>
 .container {
   max-width: 1200px;
+}
+
+.v-alert__content {
+  overflow: auto;
 }
 </style>

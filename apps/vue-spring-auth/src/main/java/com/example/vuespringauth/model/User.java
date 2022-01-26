@@ -1,10 +1,8 @@
 package com.example.vuespringauth.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Component
@@ -16,8 +14,8 @@ public class User {
     private String name;
     private OffsetDateTime createTime;
     private Role role;
-    @Transient
-    private String token;
+//    @Transient
+//    private String token;
 
     public User() {
     }
@@ -72,20 +70,20 @@ public class User {
     }
 
     public Role getRole() {
-        System.out.println(role+" here");return role;
+        return role;
     }
 
     public void setRole(Role role) {
         this.role = role;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
+//    public String getToken() {
+//        return token;
+//    }
+//
+//    public void setToken(String token) {
+//        this.token = token;
+//    }
 
     @Override
     public String toString() {
@@ -96,7 +94,6 @@ public class User {
                 ", name='" + name + '\'' +
                 ", createTime=" + createTime +
                 ", role=" + role +
-                ", token=" + token +
                 '}';
     }
 }
